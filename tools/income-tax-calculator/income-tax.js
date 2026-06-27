@@ -1,20 +1,15 @@
-/* UK Income Tax + National Insurance calculator — live, no submit button.
-   England / Wales / Northern Ireland, 2026/27 tax year (frozen thresholds).
-   Scotland uses different Income Tax bands and is intentionally out of scope. */
 (function () {
   "use strict";
 
-  // --- 2026/27 constants (England, Wales & NI) ---------------------------
-  var PERSONAL_ALLOWANCE = 12570;     // standard 1257L
-  var PA_TAPER_START = 100000;        // PA reduced £1 per £2 above this
-  var BASIC_LIMIT = 50270;            // 20% up to here (taxable incl. allowance)
-  var HIGHER_LIMIT = 125140;          // 40% up to here, 45% above
+  var PERSONAL_ALLOWANCE = 12570;
+  var PA_TAPER_START = 100000;
+  var BASIC_LIMIT = 50270;
+  var HIGHER_LIMIT = 125140;
 
   var BASIC_RATE = 0.20;
   var HIGHER_RATE = 0.40;
   var ADDITIONAL_RATE = 0.45;
 
-  // Employee Class 1 NI
   var NI_PRIMARY_THRESHOLD = 12570;
   var NI_UPPER_LIMIT = 50270;
   var NI_MAIN_RATE = 0.08;
@@ -27,6 +22,7 @@
     salaryRange: $("salary-range"),
     pension: $("pension"),
     takehome: $("r-takehome"),
+    takehomeSub: $("r-takehome-sub"),
     takehomeRow: $("r-takehome-row"),
     gross: $("r-gross"),
     pensionRow: $("row-pension"),
@@ -40,7 +36,9 @@
     bandRows: $("band-rows"),
     barTake: $("bar-take"),
     barTax: $("bar-tax"),
-    barNi: $("bar-ni")
+    barNi: $("bar-ni"),
+    banner: $("sticky-banner"),
+    pinBtn: $("pin-btn")
   };
 
   var state = { period: "year", includeNI: true };
@@ -57,20 +55,17 @@
     return isFinite(n) ? n : 0;
   }
 
-  // Personal allowance after the £100k taper.
   function allowanceFor(taxable) {
     if (taxable <= PA_TAPER_START) return PERSONAL_ALLOWANCE;
     var reduction = Math.floor((taxable - PA_TAPER_START) / 2);
     return Math.max(0, PERSONAL_ALLOWANCE - reduction);
   }
 
-  // Income Tax on a taxable income, returning total + per-band detail.
   function incomeTax(taxable) {
     var pa = allowanceFor(taxable);
     var bands = [];
     var tax = 0;
 
-    // Basic-rate band sits between the personal allowance and BASIC_LIMIT.
     var basicAmount = Math.max(0, Math.min(taxable, BASIC_LIMIT) - pa);
     var higherAmount = Math.max(0, Math.min(taxable, HIGHER_LIMIT) - Math.max(pa, BASIC_LIMIT));
     var additionalAmount = Math.max(0, taxable - Math.max(pa, HIGHER_LIMIT));
@@ -110,22 +105,27 @@
     var gross = Math.max(0, val(els.salary));
     var pensionPct = Math.min(Math.max(0, val(els.pension)), 100);
     var pension = gross * pensionPct / 100;
-    var taxable = Math.max(0, gross - pension); // pre-tax (salary sacrifice) pension
+    var taxable = Math.max(0, gross - pension);
 
     var taxResult = incomeTax(taxable);
     var tax = taxResult.tax;
     var ni = state.includeNI ? nationalInsurance(taxable) : 0;
     var takeHome = gross - pension - tax - ni;
 
-    // Labels reflecting the chosen period
-    els.periodLabel.textContent =
-      "(per " + state.period + ")";
+    els.periodLabel.textContent = "(per " + state.period + ")";
 
     els.gross.textContent = fmt(gross);
     els.allowance.textContent = fmt(taxResult.allowance);
     els.tax.textContent = "−" + fmt(tax);
     els.takehome.textContent = fmt(takeHome);
     els.takehomeRow.textContent = fmt(takeHome);
+
+    // Sticky sub-line
+    var subParts = [fmt(tax) + " tax"];
+    if (state.includeNI) subParts.push(fmt(ni) + " NI");
+    var effective = gross > 0 ? ((tax + ni) / gross) * 100 : 0;
+    subParts.push(effective.toFixed(1) + "% effective");
+    els.takehomeSub.textContent = subParts.join(" · ");
 
     if (pension > 0) {
       els.pensionRow.style.display = "";
@@ -141,12 +141,10 @@
       els.niRow.style.display = "none";
     }
 
-    var effective = gross > 0 ? ((tax + ni) / gross) * 100 : 0;
     els.effective.textContent = effective.toFixed(1) + "%";
 
-    // Breakdown bar (share of gross)
     function pct(x) { return gross > 0 ? (x / gross) * 100 : 0; }
-    els.barTake.style.width = pct(takeHome + pension) + "%"; // pension stays "yours"
+    els.barTake.style.width = pct(takeHome + pension) + "%";
     els.barTax.style.width = pct(tax) + "%";
     els.barNi.style.width = pct(ni) + "%";
 
@@ -198,6 +196,26 @@
   }
   wireToggle("period-toggle", "data-period", function (v) { state.period = v; });
   wireToggle("ni-toggle", "data-ni", function (v) { state.includeNI = v === "yes"; });
+
+  // Sticky pin toggle
+  els.pinBtn.addEventListener("click", function () {
+    var pinned = els.banner.classList.toggle("is-sticky");
+    els.pinBtn.setAttribute("aria-pressed", String(pinned));
+    if (!pinned) els.banner.classList.remove("is-stuck");
+  });
+
+  var sentinel = document.createElement("div");
+  sentinel.style.height = "1px";
+  sentinel.setAttribute("aria-hidden", "true");
+  els.banner.parentNode.insertBefore(sentinel, els.banner);
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (els.banner.classList.contains("is-sticky")) {
+        els.banner.classList.toggle("is-stuck", !e.isIntersecting);
+      }
+    });
+  }, { threshold: 0 });
+  observer.observe(sentinel);
 
   calculate();
 })();

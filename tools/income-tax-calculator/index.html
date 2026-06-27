@@ -42,54 +42,22 @@
       </p>
 
       <div class="tool-layout">
-        <!-- Inputs -->
-        <section class="card panel" aria-label="Your income">
-          <h2>Your income</h2>
-          <form id="tax-form" autocomplete="off">
-            <div class="field">
-              <label for="salary">Gross annual salary</label>
-              <div class="input-wrap has-prefix">
-                <span class="affix affix--prefix">£</span>
-                <input type="number" id="salary" inputmode="decimal" min="0" step="500" value="35000" />
-              </div>
-              <input type="range" id="salary-range" min="0" max="200000" step="500" value="35000" aria-label="Salary slider" />
+        <!-- Sticky result banner -->
+        <div class="sticky-result is-sticky" id="sticky-banner" aria-live="polite">
+          <div class="sticky-result__inner">
+            <div class="sticky-result__body">
+              <span class="sticky-result__label">Take-home pay <span id="period-label">(per year)</span></span>
+              <span class="sticky-result__value" id="r-takehome">£0</span>
+              <span class="sticky-result__sub" id="r-takehome-sub">£0 tax · £0 NI · 0% effective</span>
             </div>
-
-            <div class="field">
-              <label for="pension">Pension contribution</label>
-              <div class="input-wrap has-suffix">
-                <input type="number" id="pension" inputmode="decimal" min="0" max="100" step="0.5" value="0" />
-                <span class="affix affix--suffix">%</span>
-              </div>
-              <span class="hint">Salary-sacrifice / pre-tax. Reduces taxable income.</span>
-            </div>
-
-            <div class="field">
-              <label>National Insurance</label>
-              <div class="segmented" id="ni-toggle" role="group" aria-label="Include National Insurance">
-                <button type="button" data-ni="yes" aria-pressed="true">Include NI</button>
-                <button type="button" data-ni="no" aria-pressed="false">Tax only</button>
-              </div>
-            </div>
-
-            <div class="field">
-              <label>Show results per</label>
-              <div class="segmented" id="period-toggle" role="group" aria-label="Pay period">
-                <button type="button" data-period="year" aria-pressed="true">Year</button>
-                <button type="button" data-period="month" aria-pressed="false">Month</button>
-                <button type="button" data-period="week" aria-pressed="false">Week</button>
-              </div>
-            </div>
-          </form>
-        </section>
-
-        <!-- Results -->
-        <section class="card panel" aria-label="Results" aria-live="polite">
-          <h2>Take-home pay <span id="period-label" style="text-transform:none;letter-spacing:0">(per year)</span></h2>
-          <div class="result-hero">
-            <div class="label">Take-home pay</div>
-            <div class="value" id="r-takehome">£0</div>
+            <button class="pin-toggle" type="button" id="pin-btn"
+                    aria-pressed="true" title="Pin result to top">📌</button>
           </div>
+        </div>
+
+        <!-- Full results -->
+        <section class="card panel" aria-label="Results">
+          <h2>Breakdown</h2>
 
           <div class="breakdown-bar" aria-hidden="true">
             <span class="seg-take-home" id="bar-take" style="width:80%"></span>
@@ -141,6 +109,49 @@
             NI, no student loan, and excludes other allowances or benefits.
           </p>
         </section>
+
+        <!-- Inputs -->
+        <div class="tool-layout__inputs">
+          <section class="card panel" aria-label="Your income">
+            <h2>Your income</h2>
+            <form id="tax-form" autocomplete="off">
+              <div class="field">
+                <label for="salary">Gross annual salary</label>
+                <div class="input-wrap has-prefix">
+                  <span class="affix affix--prefix">£</span>
+                  <input type="number" id="salary" inputmode="decimal" min="0" step="500" value="35000" />
+                </div>
+                <input type="range" id="salary-range" min="0" max="200000" step="500" value="35000" aria-label="Salary slider" />
+              </div>
+
+              <div class="field">
+                <label for="pension">Pension contribution</label>
+                <div class="input-wrap has-suffix">
+                  <input type="number" id="pension" inputmode="decimal" min="0" max="100" step="0.5" value="0" />
+                  <span class="affix affix--suffix">%</span>
+                </div>
+                <span class="hint">Salary-sacrifice / pre-tax. Reduces taxable income.</span>
+              </div>
+
+              <div class="field">
+                <label>National Insurance</label>
+                <div class="segmented" id="ni-toggle" role="group" aria-label="Include National Insurance">
+                  <button type="button" data-ni="yes" aria-pressed="true">Include NI</button>
+                  <button type="button" data-ni="no" aria-pressed="false">Tax only</button>
+                </div>
+              </div>
+
+              <div class="field">
+                <label>Show results per</label>
+                <div class="segmented" id="period-toggle" role="group" aria-label="Pay period">
+                  <button type="button" data-period="year" aria-pressed="true">Year</button>
+                  <button type="button" data-period="month" aria-pressed="false">Month</button>
+                  <button type="button" data-period="week" aria-pressed="false">Week</button>
+                </div>
+              </div>
+            </form>
+          </section>
+        </div>
       </div>
     </div>
   </main>

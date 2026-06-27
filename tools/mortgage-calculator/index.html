@@ -39,54 +39,22 @@
       <p class="page-subtitle">Estimate the monthly cost of a repayment mortgage. Everything updates as you type.</p>
 
       <div class="tool-layout">
-        <!-- Inputs -->
-        <section class="card panel" aria-label="Mortgage details">
-          <h2>Your mortgage</h2>
-          <form id="mortgage-form" autocomplete="off">
-            <div class="field">
-              <label for="price">Property price</label>
-              <div class="input-wrap has-prefix">
-                <span class="affix affix--prefix">£</span>
-                <input type="number" id="price" inputmode="decimal" min="0" step="1000" value="250000" />
-              </div>
+        <!-- Sticky result banner -->
+        <div class="sticky-result is-sticky" id="sticky-banner" aria-live="polite">
+          <div class="sticky-result__inner">
+            <div class="sticky-result__body">
+              <span class="sticky-result__label">Monthly payment</span>
+              <span class="sticky-result__value" id="r-monthly">£0</span>
+              <span class="sticky-result__sub" id="r-monthly-sub">£0 total · £0 interest</span>
             </div>
-
-            <div class="field">
-              <label for="deposit">Deposit</label>
-              <div class="input-wrap has-prefix">
-                <span class="affix affix--prefix">£</span>
-                <input type="number" id="deposit" inputmode="decimal" min="0" step="1000" value="25000" />
-              </div>
-              <span class="hint" id="deposit-hint">10% deposit · borrowing £225,000</span>
-            </div>
-
-            <div class="field">
-              <label for="rate">Interest rate (APR)</label>
-              <div class="input-wrap has-suffix">
-                <input type="number" id="rate" inputmode="decimal" min="0" max="25" step="0.05" value="4.5" />
-                <span class="affix affix--suffix">%</span>
-              </div>
-              <input type="range" id="rate-range" min="0" max="12" step="0.05" value="4.5" aria-label="Interest rate slider" />
-            </div>
-
-            <div class="field">
-              <label for="term">Mortgage term</label>
-              <div class="input-wrap has-suffix">
-                <input type="number" id="term" inputmode="numeric" min="1" max="40" step="1" value="25" />
-                <span class="affix affix--suffix">years</span>
-              </div>
-              <input type="range" id="term-range" min="5" max="40" step="1" value="25" aria-label="Mortgage term slider" />
-            </div>
-          </form>
-        </section>
-
-        <!-- Results -->
-        <section class="card panel" aria-label="Results" aria-live="polite">
-          <h2>What it costs</h2>
-          <div class="result-hero">
-            <div class="label">Monthly payment</div>
-            <div class="value" id="r-monthly">£0</div>
+            <button class="pin-toggle" type="button" id="pin-btn"
+                    aria-pressed="true" title="Pin result to top">📌</button>
           </div>
+        </div>
+
+        <!-- Full results -->
+        <section class="card panel" aria-label="Results">
+          <h2>What it costs</h2>
 
           <div class="breakdown-bar" aria-hidden="true">
             <span class="seg-primary" id="bar-principal" style="width:50%"></span>
@@ -117,6 +85,49 @@
             for the whole term. Real offers vary with rate changes, fees and lender criteria.
           </p>
         </section>
+
+        <!-- Inputs -->
+        <div class="tool-layout__inputs">
+          <section class="card panel" aria-label="Mortgage details">
+            <h2>Your mortgage</h2>
+            <form id="mortgage-form" autocomplete="off">
+              <div class="field">
+                <label for="price">Property price</label>
+                <div class="input-wrap has-prefix">
+                  <span class="affix affix--prefix">£</span>
+                  <input type="number" id="price" inputmode="decimal" min="0" step="1000" value="250000" />
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="deposit">Deposit</label>
+                <div class="input-wrap has-prefix">
+                  <span class="affix affix--prefix">£</span>
+                  <input type="number" id="deposit" inputmode="decimal" min="0" step="1000" value="25000" />
+                </div>
+                <span class="hint" id="deposit-hint">10% deposit · borrowing £225,000</span>
+              </div>
+
+              <div class="field">
+                <label for="rate">Interest rate (APR)</label>
+                <div class="input-wrap has-suffix">
+                  <input type="number" id="rate" inputmode="decimal" min="0" max="25" step="0.05" value="4.5" />
+                  <span class="affix affix--suffix">%</span>
+                </div>
+                <input type="range" id="rate-range" min="0" max="12" step="0.05" value="4.5" aria-label="Interest rate slider" />
+              </div>
+
+              <div class="field">
+                <label for="term">Mortgage term</label>
+                <div class="input-wrap has-suffix">
+                  <input type="number" id="term" inputmode="numeric" min="1" max="40" step="1" value="25" />
+                  <span class="affix affix--suffix">years</span>
+                </div>
+                <input type="range" id="term-range" min="5" max="40" step="1" value="25" aria-label="Mortgage term slider" />
+              </div>
+            </form>
+          </section>
+        </div>
       </div>
     </div>
   </main>
