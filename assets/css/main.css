@@ -211,12 +211,12 @@ h1, h2, h3 { line-height: 1.2; }
   box-shadow: var(--shadow);
 }
 
-main { padding-block: 2.5rem 4rem; }
+main { padding-block: 1.5rem 4rem; }
 
 .page-title {
   font-size: clamp(1.9rem, 5vw, 2.6rem);
   letter-spacing: -0.02em;
-  margin: 0 0 0.4rem;
+  margin: 0 0 1rem;
 }
 .page-subtitle {
   color: var(--text-muted);
