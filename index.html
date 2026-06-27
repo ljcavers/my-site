@@ -3,15 +3,68 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My Site</title>
-  <link rel="stylesheet" href="styles.css" />
+  <title>Basic Tools — simple, clean everyday calculators</title>
+  <meta name="description" content="Basic Tools is a small collection of clean, fast, no-nonsense calculators that update as you type." />
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <!-- Apply saved theme before paint to avoid a flash -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("basic-tools-theme");
+        if (t) document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body>
-  <main class="hero">
-    <h1>Hello 👋</h1>
-    <p class="tagline">This is the start of your site. Edits show up here live.</p>
-    <p class="status" id="status">Live preview connected.</p>
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="brand" href="index.html">
+        <span class="brand__mark">B</span>
+        <span>Basic&nbsp;Tools</span>
+      </a>
+      <nav>
+        <a class="nav-link" href="tools/mortgage-calculator/">Mortgage</a>
+        <a class="nav-link" href="tools/income-tax-calculator/">Income Tax</a>
+        <button class="theme-toggle" type="button" title="Toggle theme">
+          <span class="icon-sun">☀️</span><span class="icon-moon">🌙</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <h1 class="page-title">Simple tools for everyday tasks</h1>
+      <p class="page-subtitle">
+        Clean, fast calculators that update live as you type — no buttons, no waiting.
+      </p>
+
+      <section class="tool-grid" aria-label="Available tools">
+        <a class="card tool-card" href="tools/mortgage-calculator/">
+          <span class="tool-card__icon tool-card__icon--primary">🏠</span>
+          <h3>Mortgage Calculator</h3>
+          <p>Work out monthly repayments, total interest and the full cost of a repayment mortgage.</p>
+          <span class="tool-card__cta">Open tool →</span>
+        </a>
+
+        <a class="card tool-card" href="tools/income-tax-calculator/">
+          <span class="tool-card__icon tool-card__icon--secondary">💷</span>
+          <h3>UK Income Tax Calculator</h3>
+          <p>Estimate Income Tax, National Insurance and take-home pay for England, Wales &amp; NI.</p>
+          <span class="tool-card__cta">Open tool →</span>
+        </a>
+      </section>
+    </div>
   </main>
-  <script src="script.js"></script>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>Basic Tools — built with plain HTML, CSS &amp; JavaScript.</span>
+      <span>Estimates only. Always double-check important figures.</span>
+    </div>
+  </footer>
+
+  <script src="assets/js/theme.js"></script>
 </body>
 </html>
