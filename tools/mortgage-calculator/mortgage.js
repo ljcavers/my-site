@@ -1,7 +1,3 @@
-/* Mortgage Calculator — live, no submit button.
-   Standard repayment (amortising) formula:
-       M = P * r / (1 - (1 + r)^-n)
-   where P = principal, r = monthly rate, n = number of monthly payments. */
 (function () {
   "use strict";
 
@@ -16,12 +12,15 @@
     termRange: $("term-range"),
     depositHint: $("deposit-hint"),
     monthly: $("r-monthly"),
+    monthlySub: $("r-monthly-sub"),
     loan: $("r-loan"),
     interest: $("r-interest"),
     total: $("r-total"),
     ltv: $("r-ltv"),
     barPrincipal: $("bar-principal"),
-    barInterest: $("bar-interest")
+    barInterest: $("bar-interest"),
+    banner: $("sticky-banner"),
+    pinBtn: $("pin-btn")
   };
 
   var gbp0 = new Intl.NumberFormat("en-GB", {
@@ -59,8 +58,8 @@
       totalInterest = totalRepaid - principal;
     }
 
-    // Output
     els.monthly.textContent = gbp2.format(monthly);
+    els.monthlySub.textContent = gbp0.format(totalRepaid) + " total · " + gbp0.format(totalInterest) + " interest";
     els.loan.textContent = gbp0.format(principal);
     els.interest.textContent = gbp0.format(totalInterest);
     els.total.textContent = gbp0.format(totalRepaid);
@@ -72,13 +71,11 @@
     els.depositHint.textContent =
       num0.format(depPct) + "% deposit · borrowing " + gbp0.format(principal);
 
-    // Breakdown bar (principal vs interest share of total repaid)
     var pPct = totalRepaid > 0 ? (principal / totalRepaid) * 100 : 100;
     els.barPrincipal.style.width = pPct + "%";
     els.barInterest.style.width = (100 - pPct) + "%";
   }
 
-  // Keep the paired number input + range slider in sync.
   function pair(input, range) {
     input.addEventListener("input", function () {
       range.value = input.value;
@@ -95,6 +92,26 @@
   [els.price, els.deposit].forEach(function (el) {
     el.addEventListener("input", calculate);
   });
+
+  // Sticky pin toggle
+  els.pinBtn.addEventListener("click", function () {
+    var pinned = els.banner.classList.toggle("is-sticky");
+    els.pinBtn.setAttribute("aria-pressed", String(pinned));
+    if (!pinned) els.banner.classList.remove("is-stuck");
+  });
+
+  var sentinel = document.createElement("div");
+  sentinel.style.height = "1px";
+  sentinel.setAttribute("aria-hidden", "true");
+  els.banner.parentNode.insertBefore(sentinel, els.banner);
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (els.banner.classList.contains("is-sticky")) {
+        els.banner.classList.toggle("is-stuck", !e.isIntersecting);
+      }
+    });
+  }, { threshold: 0 });
+  observer.observe(sentinel);
 
   calculate();
 })();
