@@ -24,8 +24,11 @@
         <span>Basic&nbsp;Tools</span>
       </a>
       <nav>
-        <a class="nav-link" href="tools/mortgage-calculator/">Mortgage</a>
-        <a class="nav-link" href="tools/income-tax-calculator/">Income Tax</a>
+        <select class="nav-select" id="tool-nav" aria-label="Navigate to tool">
+          <option value="" selected>Home</option>
+          <option value="tools/mortgage-calculator/">Mortgage Calculator</option>
+          <option value="tools/income-tax-calculator/">Income Tax Calculator</option>
+        </select>
         <button class="theme-toggle" type="button" title="Toggle theme">
           <span class="icon-sun">☀️</span><span class="icon-moon">🌙</span>
         </button>

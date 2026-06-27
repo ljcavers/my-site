@@ -34,7 +34,13 @@
         "Switch to " + (currentTheme() === "dark" ? "light" : "dark") + " mode");
     }
 
-    // Follow the OS only while the user hasn't made an explicit choice.
+    var nav = document.getElementById("tool-nav");
+    if (nav) {
+      nav.addEventListener("change", function () {
+        if (nav.value) window.location.href = nav.value;
+      });
+    }
+
     window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function (e) {
       if (!stored()) root.setAttribute("data-theme", e.matches ? "dark" : "light");
     });
