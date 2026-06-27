@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UK Income Tax Calculator — Basic Tools</title>
+  <meta name="description" content="Live UK Income Tax and National Insurance calculator for England, Wales and Northern Ireland. See your take-home pay update as you type." />
+  <link rel="stylesheet" href="../../assets/css/main.css" />
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("basic-tools-theme");
+        if (t) document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="brand" href="../../index.html">
+        <span class="brand__mark">B</span>
+        <span>Basic&nbsp;Tools</span>
+      </a>
+      <nav>
+        <a class="nav-link" href="../mortgage-calculator/">Mortgage</a>
+        <a class="nav-link" href="../income-tax-calculator/">Income Tax</a>
+        <button class="theme-toggle" type="button" title="Toggle theme">
+          <span class="icon-sun">☀️</span><span class="icon-moon">🌙</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <a class="back-link" href="../../index.html">← All tools</a>
+      <h1 class="page-title">UK Income Tax Calculator</h1>
+      <p class="page-subtitle">
+        Income Tax, National Insurance and take-home pay for England, Wales &amp; Northern Ireland —
+        2026/27 rates. Updates as you type.
+      </p>
+
+      <div class="tool-layout">
+        <!-- Inputs -->
+        <section class="card panel" aria-label="Your income">
+          <h2>Your income</h2>
+          <form id="tax-form" autocomplete="off">
+            <div class="field">
+              <label for="salary">Gross annual salary</label>
+              <div class="input-wrap has-prefix">
+                <span class="affix affix--prefix">£</span>
+                <input type="number" id="salary" inputmode="decimal" min="0" step="500" value="35000" />
+              </div>
+              <input type="range" id="salary-range" min="0" max="200000" step="500" value="35000" aria-label="Salary slider" />
+            </div>
+
+            <div class="field">
+              <label for="pension">Pension contribution</label>
+              <div class="input-wrap has-suffix">
+                <input type="number" id="pension" inputmode="decimal" min="0" max="100" step="0.5" value="0" />
+                <span class="affix affix--suffix">%</span>
+              </div>
+              <span class="hint">Salary-sacrifice / pre-tax. Reduces taxable income.</span>
+            </div>
+
+            <div class="field">
+              <label>National Insurance</label>
+              <div class="segmented" id="ni-toggle" role="group" aria-label="Include National Insurance">
+                <button type="button" data-ni="yes" aria-pressed="true">Include NI</button>
+                <button type="button" data-ni="no" aria-pressed="false">Tax only</button>
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Show results per</label>
+              <div class="segmented" id="period-toggle" role="group" aria-label="Pay period">
+                <button type="button" data-period="year" aria-pressed="true">Year</button>
+                <button type="button" data-period="month" aria-pressed="false">Month</button>
+                <button type="button" data-period="week" aria-pressed="false">Week</button>
+              </div>
+            </div>
+          </form>
+        </section>
+
+        <!-- Results -->
+        <section class="card panel" aria-label="Results" aria-live="polite">
+          <h2>Take-home pay <span id="period-label" style="text-transform:none;letter-spacing:0">(per year)</span></h2>
+          <div class="result-hero">
+            <div class="label">Take-home pay</div>
+            <div class="value" id="r-takehome">£0</div>
+          </div>
+
+          <div class="breakdown-bar" aria-hidden="true">
+            <span class="seg-take-home" id="bar-take" style="width:80%"></span>
+            <span class="seg-primary" id="bar-tax" style="width:12%"></span>
+            <span class="seg-tertiary" id="bar-ni" style="width:8%"></span>
+          </div>
+
+          <div class="result-rows">
+            <div class="result-row">
+              <span class="k">Gross income</span>
+              <span class="v" id="r-gross">£0</span>
+            </div>
+            <div class="result-row" id="row-pension">
+              <span class="k">Pension contribution</span>
+              <span class="v accent-secondary" id="r-pension">£0</span>
+            </div>
+            <div class="result-row">
+              <span class="k">Personal allowance</span>
+              <span class="v" id="r-allowance">£0</span>
+            </div>
+            <div class="result-row">
+              <span class="k">Income Tax</span>
+              <span class="v accent-primary" id="r-tax">£0</span>
+            </div>
+            <div class="result-row" id="row-ni">
+              <span class="k">National Insurance</span>
+              <span class="v accent-tertiary" id="r-ni">£0</span>
+            </div>
+            <div class="result-row result-row--total">
+              <span class="k">Take-home pay</span>
+              <span class="v" id="r-takehome-row">£0</span>
+            </div>
+            <div class="result-row">
+              <span class="k">Effective tax rate <small>tax + NI as % of gross</small></span>
+              <span class="v" id="r-effective">0%</span>
+            </div>
+          </div>
+
+          <details class="note" id="tax-breakdown" style="margin-top:1.4rem">
+            <summary style="cursor:pointer;color:var(--primary-strong);font-weight:600">
+              Income Tax band breakdown
+            </summary>
+            <div class="result-rows" id="band-rows" style="margin-top:0.6rem"></div>
+          </details>
+
+          <p class="note">
+            Based on 2026/27 rates for England, Wales &amp; Northern Ireland with a standard
+            1257L tax code. Scotland has different Income Tax bands. Assumes employee (Class 1)
+            NI, no student loan, and excludes other allowances or benefits.
+          </p>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>Basic Tools — UK Income Tax Calculator</span>
+      <span>Estimates only. Not tax advice.</span>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/theme.js"></script>
+  <script src="income-tax.js"></script>
+</body>
+</html>

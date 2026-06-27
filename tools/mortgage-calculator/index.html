@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mortgage Calculator — Basic Tools</title>
+  <meta name="description" content="A clean, live mortgage repayment calculator. See monthly payments, total interest and total cost update as you type." />
+  <link rel="stylesheet" href="../../assets/css/main.css" />
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("basic-tools-theme");
+        if (t) document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="brand" href="../../index.html">
+        <span class="brand__mark">B</span>
+        <span>Basic&nbsp;Tools</span>
+      </a>
+      <nav>
+        <a class="nav-link" href="../mortgage-calculator/">Mortgage</a>
+        <a class="nav-link" href="../income-tax-calculator/">Income Tax</a>
+        <button class="theme-toggle" type="button" title="Toggle theme">
+          <span class="icon-sun">☀️</span><span class="icon-moon">🌙</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <a class="back-link" href="../../index.html">← All tools</a>
+      <h1 class="page-title">Mortgage Calculator</h1>
+      <p class="page-subtitle">Estimate the monthly cost of a repayment mortgage. Everything updates as you type.</p>
+
+      <div class="tool-layout">
+        <!-- Inputs -->
+        <section class="card panel" aria-label="Mortgage details">
+          <h2>Your mortgage</h2>
+          <form id="mortgage-form" autocomplete="off">
+            <div class="field">
+              <label for="price">Property price</label>
+              <div class="input-wrap has-prefix">
+                <span class="affix affix--prefix">£</span>
+                <input type="number" id="price" inputmode="decimal" min="0" step="1000" value="250000" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="deposit">Deposit</label>
+              <div class="input-wrap has-prefix">
+                <span class="affix affix--prefix">£</span>
+                <input type="number" id="deposit" inputmode="decimal" min="0" step="1000" value="25000" />
+              </div>
+              <span class="hint" id="deposit-hint">10% deposit · borrowing £225,000</span>
+            </div>
+
+            <div class="field">
+              <label for="rate">Interest rate (APR)</label>
+              <div class="input-wrap has-suffix">
+                <input type="number" id="rate" inputmode="decimal" min="0" max="25" step="0.05" value="4.5" />
+                <span class="affix affix--suffix">%</span>
+              </div>
+              <input type="range" id="rate-range" min="0" max="12" step="0.05" value="4.5" aria-label="Interest rate slider" />
+            </div>
+
+            <div class="field">
+              <label for="term">Mortgage term</label>
+              <div class="input-wrap has-suffix">
+                <input type="number" id="term" inputmode="numeric" min="1" max="40" step="1" value="25" />
+                <span class="affix affix--suffix">years</span>
+              </div>
+              <input type="range" id="term-range" min="5" max="40" step="1" value="25" aria-label="Mortgage term slider" />
+            </div>
+          </form>
+        </section>
+
+        <!-- Results -->
+        <section class="card panel" aria-label="Results" aria-live="polite">
+          <h2>What it costs</h2>
+          <div class="result-hero">
+            <div class="label">Monthly payment</div>
+            <div class="value" id="r-monthly">£0</div>
+          </div>
+
+          <div class="breakdown-bar" aria-hidden="true">
+            <span class="seg-primary" id="bar-principal" style="width:50%"></span>
+            <span class="seg-tertiary" id="bar-interest" style="width:50%"></span>
+          </div>
+
+          <div class="result-rows">
+            <div class="result-row">
+              <span class="k">Amount borrowed <small>principal</small></span>
+              <span class="v accent-primary" id="r-loan">£0</span>
+            </div>
+            <div class="result-row">
+              <span class="k">Total interest <small>over the full term</small></span>
+              <span class="v accent-tertiary" id="r-interest">£0</span>
+            </div>
+            <div class="result-row result-row--total">
+              <span class="k">Total repaid</span>
+              <span class="v" id="r-total">£0</span>
+            </div>
+            <div class="result-row">
+              <span class="k">Loan-to-value (LTV)</span>
+              <span class="v" id="r-ltv">0%</span>
+            </div>
+          </div>
+
+          <p class="note">
+            Figures assume a standard capital-and-interest repayment mortgage at a fixed rate
+            for the whole term. Real offers vary with rate changes, fees and lender criteria.
+          </p>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>Basic Tools — Mortgage Calculator</span>
+      <span>Estimates only. Not financial advice.</span>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/theme.js"></script>
+  <script src="mortgage.js"></script>
+</body>
+</html>
