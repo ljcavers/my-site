@@ -46,9 +46,9 @@
         <div class="sticky-result is-sticky" id="sticky-banner" aria-live="polite">
           <div class="sticky-result__inner">
             <div class="sticky-result__body">
-              <span class="sticky-result__label">Take-home pay <span id="period-label">(per year)</span></span>
-              <span class="sticky-result__value" id="r-takehome">£0</span>
-              <span class="sticky-result__sub" id="r-takehome-sub">£0 tax · £0 NI · 0% effective</span>
+              <span class="sticky-result__label">Monthly take-home</span>
+              <span class="sticky-result__value" id="r-takehome-monthly">£0</span>
+              <span class="sticky-result__sub"><span id="r-takehome-yearly">£0</span>/year · <span id="r-effective-banner">0%</span> effective rate</span>
             </div>
             <button class="pin-toggle" type="button" id="pin-btn"
                     aria-pressed="true" title="Pin result to top">📌</button>
@@ -65,36 +65,53 @@
             <span class="seg-tertiary" id="bar-ni" style="width:8%"></span>
           </div>
 
-          <div class="result-rows">
-            <div class="result-row">
-              <span class="k">Gross income</span>
-              <span class="v" id="r-gross">£0</span>
-            </div>
-            <div class="result-row" id="row-pension">
-              <span class="k">Pension contribution</span>
-              <span class="v accent-secondary" id="r-pension">£0</span>
-            </div>
-            <div class="result-row">
-              <span class="k">Personal allowance</span>
-              <span class="v" id="r-allowance">£0</span>
-            </div>
-            <div class="result-row">
-              <span class="k">Income Tax</span>
-              <span class="v accent-primary" id="r-tax">£0</span>
-            </div>
-            <div class="result-row" id="row-ni">
-              <span class="k">National Insurance</span>
-              <span class="v accent-tertiary" id="r-ni">£0</span>
-            </div>
-            <div class="result-row result-row--total">
-              <span class="k">Take-home pay</span>
-              <span class="v" id="r-takehome-row">£0</span>
-            </div>
-            <div class="result-row">
-              <span class="k">Effective tax rate <small>tax + NI as % of gross</small></span>
-              <span class="v" id="r-effective">0%</span>
-            </div>
-          </div>
+          <table class="breakdown-table" aria-label="Income breakdown by period">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Monthly</th>
+                <th>Yearly</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Gross income</td>
+                <td id="t-gross-m">£0</td>
+                <td id="t-gross-y">£0</td>
+              </tr>
+              <tr id="row-pension">
+                <td>Pension</td>
+                <td id="t-pension-m">£0</td>
+                <td id="t-pension-y">£0</td>
+              </tr>
+              <tr>
+                <td>Personal allowance</td>
+                <td id="t-allowance-m">£0</td>
+                <td id="t-allowance-y">£0</td>
+              </tr>
+              <tr class="row-accent-primary">
+                <td>Income Tax</td>
+                <td id="t-tax-m">£0</td>
+                <td id="t-tax-y">£0</td>
+              </tr>
+              <tr id="row-ni" class="row-accent-tertiary">
+                <td>National Insurance</td>
+                <td id="t-ni-m">£0</td>
+                <td id="t-ni-y">£0</td>
+              </tr>
+              <tr class="row-total">
+                <td>Take-home pay</td>
+                <td id="t-takehome-m">£0</td>
+                <td id="t-takehome-y">£0</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td>Effective tax rate</td>
+                <td colspan="2" id="t-effective">0%</td>
+              </tr>
+            </tfoot>
+          </table>
 
           <details class="note" id="tax-breakdown" style="margin-top:1.4rem">
             <summary style="cursor:pointer;color:var(--primary-strong);font-weight:600">
@@ -141,14 +158,6 @@
                 </div>
               </div>
 
-              <div class="field">
-                <label>Show results per</label>
-                <div class="segmented" id="period-toggle" role="group" aria-label="Pay period">
-                  <button type="button" data-period="year" aria-pressed="true">Year</button>
-                  <button type="button" data-period="month" aria-pressed="false">Month</button>
-                  <button type="button" data-period="week" aria-pressed="false">Week</button>
-                </div>
-              </div>
             </form>
           </section>
         </div>

@@ -21,18 +21,18 @@
     salary: $("salary"),
     salaryRange: $("salary-range"),
     pension: $("pension"),
-    takehome: $("r-takehome"),
-    takehomeSub: $("r-takehome-sub"),
-    takehomeRow: $("r-takehome-row"),
-    gross: $("r-gross"),
+    takehomeMonthly: $("r-takehome-monthly"),
+    takehomeYearly: $("r-takehome-yearly"),
+    effectiveBanner: $("r-effective-banner"),
+    tGrossM: $("t-gross-m"),       tGrossY: $("t-gross-y"),
     pensionRow: $("row-pension"),
-    pensionVal: $("r-pension"),
-    allowance: $("r-allowance"),
-    tax: $("r-tax"),
-    ni: $("r-ni"),
+    tPensionM: $("t-pension-m"),   tPensionY: $("t-pension-y"),
+    tAllowanceM: $("t-allowance-m"), tAllowanceY: $("t-allowance-y"),
+    tTaxM: $("t-tax-m"),           tTaxY: $("t-tax-y"),
     niRow: $("row-ni"),
-    effective: $("r-effective"),
-    periodLabel: $("period-label"),
+    tNiM: $("t-ni-m"),             tNiY: $("t-ni-y"),
+    tTakehomeM: $("t-takehome-m"), tTakehomeY: $("t-takehome-y"),
+    tEffective: $("t-effective"),
     bandRows: $("band-rows"),
     barTake: $("bar-take"),
     barTax: $("bar-tax"),
@@ -41,7 +41,7 @@
     pinBtn: $("pin-btn")
   };
 
-  var state = { period: "year", includeNI: true };
+  var state = { includeNI: true };
 
   var gbp = new Intl.NumberFormat("en-GB", {
     style: "currency", currency: "GBP", maximumFractionDigits: 0
@@ -54,6 +54,9 @@
     var n = parseFloat(el.value);
     return isFinite(n) ? n : 0;
   }
+
+  function fmtY(v) { return gbp.format(v); }
+  function fmtM(v) { return gbp2.format(v / 12); }
 
   function allowanceFor(taxable) {
     if (taxable <= PA_TAPER_START) return PERSONAL_ALLOWANCE;
@@ -92,15 +95,6 @@
     return main + upper;
   }
 
-  function periodFactor() {
-    return state.period === "month" ? 12 : state.period === "week" ? 52 : 1;
-  }
-
-  function fmt(annual) {
-    var v = annual / periodFactor();
-    return state.period === "year" ? gbp.format(v) : gbp2.format(v);
-  }
-
   function calculate() {
     var gross = Math.max(0, val(els.salary));
     var pensionPct = Math.min(Math.max(0, val(els.pension)), 100);
@@ -111,37 +105,41 @@
     var tax = taxResult.tax;
     var ni = state.includeNI ? nationalInsurance(taxable) : 0;
     var takeHome = gross - pension - tax - ni;
-
-    els.periodLabel.textContent = "(per " + state.period + ")";
-
-    els.gross.textContent = fmt(gross);
-    els.allowance.textContent = fmt(taxResult.allowance);
-    els.tax.textContent = "−" + fmt(tax);
-    els.takehome.textContent = fmt(takeHome);
-    els.takehomeRow.textContent = fmt(takeHome);
-
-    var subParts = [fmt(tax) + " tax"];
-    if (state.includeNI) subParts.push(fmt(ni) + " NI");
     var effective = gross > 0 ? ((tax + ni) / gross) * 100 : 0;
-    subParts.push(effective.toFixed(1) + "% effective");
-    els.takehomeSub.textContent = subParts.join(" · ");
+
+    // Sticky banner — monthly headline, yearly in small
+    els.takehomeMonthly.textContent = fmtM(takeHome);
+    els.takehomeYearly.textContent = fmtY(takeHome);
+    els.effectiveBanner.textContent = effective.toFixed(1) + "%";
+
+    // Table — month and year side by side
+    els.tGrossM.textContent = fmtM(gross);
+    els.tGrossY.textContent = fmtY(gross);
+    els.tAllowanceM.textContent = fmtM(taxResult.allowance);
+    els.tAllowanceY.textContent = fmtY(taxResult.allowance);
+    els.tTaxM.textContent = "−" + fmtM(tax);
+    els.tTaxY.textContent = "−" + fmtY(tax);
+    els.tTakehomeM.textContent = fmtM(takeHome);
+    els.tTakehomeY.textContent = fmtY(takeHome);
+    els.tEffective.textContent = effective.toFixed(1) + "%";
 
     if (pension > 0) {
       els.pensionRow.style.display = "";
-      els.pensionVal.textContent = "−" + fmt(pension);
+      els.tPensionM.textContent = "−" + fmtM(pension);
+      els.tPensionY.textContent = "−" + fmtY(pension);
     } else {
       els.pensionRow.style.display = "none";
     }
 
     if (state.includeNI) {
       els.niRow.style.display = "";
-      els.ni.textContent = "−" + fmt(ni);
+      els.tNiM.textContent = "−" + fmtM(ni);
+      els.tNiY.textContent = "−" + fmtY(ni);
     } else {
       els.niRow.style.display = "none";
     }
 
-    els.effective.textContent = effective.toFixed(1) + "%";
-
+    // Breakdown bar
     function pct(x) { return gross > 0 ? (x / gross) * 100 : 0; }
     els.barTake.style.width = pct(takeHome + pension) + "%";
     els.barTax.style.width = pct(tax) + "%";
@@ -154,19 +152,19 @@
     if (!bands.length) {
       els.bandRows.innerHTML =
         '<div class="result-row"><span class="k">No Income Tax due</span>' +
-        '<span class="v">' + fmt(0) + "</span></div>";
+        '<span class="v">' + fmtY(0) + "</span></div>";
       return;
     }
     var html = "";
     bands.forEach(function (b) {
       html +=
         '<div class="result-row"><span class="k">' + b.name +
-        ' <small>on ' + fmt(b.amount) + "</small></span>" +
-        '<span class="v">' + fmt(b.tax) + "</span></div>";
+        ' <small>on ' + fmtY(b.amount) + "</small></span>" +
+        '<span class="v">' + fmtY(b.tax) + "</span></div>";
     });
     html +=
       '<div class="result-row result-row--total"><span class="k">Total Income Tax</span>' +
-      '<span class="v">' + fmt(totalTax) + "</span></div>";
+      '<span class="v">' + fmtY(totalTax) + "</span></div>";
     els.bandRows.innerHTML = html;
   }
 
@@ -192,7 +190,6 @@
       calculate();
     });
   }
-  wireToggle("period-toggle", "data-period", function (v) { state.period = v; });
   wireToggle("ni-toggle", "data-ni", function (v) { state.includeNI = v === "yes"; });
 
   // Sticky pin toggle

@@ -456,6 +456,47 @@ input.invalid { border-color: var(--tertiary); }
   transform: rotate(-45deg);
 }
 
+/* --- Breakdown table ----------------------------------------------------- */
+.breakdown-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+.breakdown-table th,
+.breakdown-table td {
+  padding: 0.65rem 0.25rem;
+  text-align: right;
+  border-bottom: 1px solid var(--border);
+}
+.breakdown-table th:first-child,
+.breakdown-table td:first-child {
+  text-align: left;
+  color: var(--text-muted);
+}
+.breakdown-table thead th {
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  font-weight: 600;
+  padding-bottom: 0.5rem;
+}
+.breakdown-table .row-accent-primary td:not(:first-child) { color: var(--primary-strong); }
+.breakdown-table .row-accent-tertiary td:not(:first-child) { color: var(--tertiary); }
+.breakdown-table .row-accent-secondary td:not(:first-child) { color: var(--secondary); }
+.breakdown-table .row-total td {
+  font-weight: 700;
+  font-size: 1.05rem;
+  border-bottom: 0;
+}
+.breakdown-table tfoot td {
+  border-bottom: 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  padding-top: 0.4rem;
+}
+.breakdown-table tfoot td[colspan] { text-align: right; font-weight: 600; }
+
 /* --- Results ------------------------------------------------------------- */
 .result-hero {
   text-align: center;
