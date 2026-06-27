@@ -34,9 +34,6 @@
     tTakehomeM: $("t-takehome-m"), tTakehomeY: $("t-takehome-y"),
     tEffective: $("t-effective"),
     bandRows: $("band-rows"),
-    barTake: $("bar-take"),
-    barTax: $("bar-tax"),
-    barNi: $("bar-ni"),
     banner: $("sticky-banner"),
     pinBtn: $("pin-btn")
   };
@@ -138,12 +135,6 @@
     } else {
       els.niRow.style.display = "none";
     }
-
-    // Breakdown bar
-    function pct(x) { return gross > 0 ? (x / gross) * 100 : 0; }
-    els.barTake.style.width = pct(takeHome + pension) + "%";
-    els.barTax.style.width = pct(tax) + "%";
-    els.barNi.style.width = pct(ni) + "%";
 
     renderBands(taxResult.bands, tax);
   }
